@@ -82,7 +82,6 @@ public class Printer {
   }
 
   public static void printHelpPage(String command) {
-    // TODO
     switch (command) {
       case "ls":
         System.out.println("Usage:  ls ENTITY");
@@ -95,9 +94,9 @@ public class Printer {
         System.out.println("ENTITY: 'project', 'issue', 'employee', 'entry'");
         System.out.println("PARAMS:");
         System.out.println("-project: NAME (string)");
-        System.out.println("-issue: "); // TODO
-        System.out.println("-employee: "); // TODO
-        System.out.println("-entry: "); // TODO
+        System.out.println("-issue: PRIORITY ('LOW' | 'NORMAL' | 'HIGH'), ESTIMATED COMPLETION TIME (hh:mm:ss)");
+        System.out.println("-employee: FIRST NAME (string), LAST NAME (string), DATE OF BIRTH (dd:mm:yyyy)");
+        System.out.println("-entry: ACTIVITY (string), START TIME (hh:mm:ss), END TIME (hh:mm:ss)");
         break;
       case "rm":
         System.out.println("Usage:  rm ENTITY PARAMS");
@@ -105,9 +104,9 @@ public class Printer {
         System.out.println("ENTITY: 'project', 'issue', 'employee', 'entry'");
         System.out.println("PARAMS:");
         System.out.println("-project: ID (integer)");
-        System.out.println("-issue: "); // TODO
-        System.out.println("-employee: "); // TODO
-        System.out.println("-entry: "); // TODO
+        System.out.println("-issue: ID (integer)");
+        System.out.println("-employee: ID (integer)");
+        System.out.println("-entry: ID (integer)");
         break;
       case "update":
         System.out.println("Usage:  update ENTITY PARAMS");

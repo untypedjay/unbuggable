@@ -1,14 +1,19 @@
 package io.untypedjay.util;
 
+import io.untypedjay.domain.Employee;
+import io.untypedjay.domain.Issue;
+import io.untypedjay.domain.LogbookEntry;
 import io.untypedjay.domain.Project;
-import io.untypedjay.services.ProjectService;
-import io.untypedjay.services.ProjectServiceImpl;
+import io.untypedjay.services.*;
 
 import java.time.Duration;
 import java.util.List;
 
 public class Printer {
   private static ProjectService projectService = new ProjectServiceImpl();
+  private static EmployeeService employeeService = new EmployeeServiceImpl();
+  private static IssueService issueService = new IssueServiceImpl();
+  private static LogbookEntryService logbookEntryService = new LogbookEntryServiceImpl();
 
   public static void printInvalidCommandError(String[] commandArray) {
     System.out.println("'" + String.join(" ", commandArray) + "' is not a valid command");
@@ -24,18 +29,42 @@ public class Printer {
   }
 
   public static void printEmployees() {
-    System.out.println("ID    NAME    DATE OF BIRTH   ADDRESS   SALARY   RENTER    RATE    START   END");
-    // TODO
+    System.out.println("ID    NAME    DATE OF BIRTH   ADDRESS");
+    List<Employee> employees = employeeService.getAll();
+    for (var employee : employees) {
+      System.out.print(employee.getId() + "   ");
+      System.out.print(employee.getFirstName() + " " + employee.getLastName() + "   ");
+      System.out.print(employee.getDateOfBirth() + "    ");
+      System.out.print(employee.getAddress());
+      System.out.println();
+    }
   }
 
   public static void printIssues() {
-    System.out.println("ID    STATE   PRIORITY    ESTIMATION    PROGRESS");
-    // TODO
+    System.out.println("ID    STATE   PRIORITY    ESTIMATION    PROGRESS    ASSIGNEE");
+    List<Issue> issues = issueService.getAll();
+    for (var issue : issues) {
+      System.out.print(issue.getId() + "    ");
+      System.out.print(issue.getState() + "    ");
+      System.out.print(issue.getPriority() + "   ");
+      System.out.print(issue.getEstimatedCompletionTime() + "    ");
+      System.out.print(issue.getProgress() + "   ");
+      System.out.print(issue.getAssignee().getFirstName() + " " + issue.getAssignee().getFirstName());
+      System.out.println();
+    }
   }
 
   public static void printLogbookEntries() {
-    System.out.println("ID    ACTIVITY    START   END");
-    // TODO
+    System.out.println("ID    ACTIVITY    START   END   EMPLOYEE");
+   List<LogbookEntry> logbookEntries = logbookEntryService.getAll();
+   for (var logbookEntry : logbookEntries) {
+     System.out.print(logbookEntry.getId() + "    ");
+     System.out.print(logbookEntry.getActivity() + "    ");
+     System.out.print(logbookEntry.getStartTime() + "   ");
+     System.out.print(logbookEntry.getEndTime() + "   ");
+     System.out.print(logbookEntry.getEmployee().getFirstName() + " " + logbookEntry.getEmployee().getLastName());
+     System.out.println();
+   }
   }
 
   public static void printProjectStats(String[] commandArray) {

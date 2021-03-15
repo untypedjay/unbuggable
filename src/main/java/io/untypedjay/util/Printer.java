@@ -1,8 +1,15 @@
 package io.untypedjay.util;
 
+import io.untypedjay.domain.Project;
+import io.untypedjay.services.ProjectService;
+import io.untypedjay.services.ProjectServiceImpl;
+
 import java.time.Duration;
+import java.util.List;
 
 public class Printer {
+  private static ProjectService projectService = new ProjectServiceImpl();
+
   public static void printInvalidCommandError(String[] commandArray) {
     System.out.println("'" + String.join(" ", commandArray) + "' is not a valid command");
     System.out.println("See 'help'");
@@ -10,16 +17,14 @@ public class Printer {
 
   public static void printProjects() {
     System.out.println("ID    NAME");
-    // TODO
-  }
-
-  public static void printAddresses() {
-    System.out.println("ZIP   CITY    STREET");
-    // TODO
+    List<Project> projects = projectService.getAll();
+    for (var project : projects) {
+      System.out.println(project.getId() + "    " + project.getName());
+    }
   }
 
   public static void printEmployees() {
-    System.out.println("ID    NAME    DATE OF BIRTH   SALARY   RENTER    RATE    START   END");
+    System.out.println("ID    NAME    DATE OF BIRTH   ADDRESS   SALARY   RENTER    RATE    START   END");
     // TODO
   }
 
@@ -53,38 +58,35 @@ public class Printer {
       case "ls":
         System.out.println("Usage:  ls ENTITY");
         System.out.println("List all items of an entity");
-        System.out.println("ENTITY: 'projects', 'issues', 'addresses', 'employees', 'entries'");
+        System.out.println("ENTITY: 'projects', 'issues', 'employees', 'entries'");
         break;
       case "mk":
         System.out.println("Usage:  mk ENTITY PARAMS");
         System.out.println("Create a new entity");
-        System.out.println("ENTITY: 'project', 'issue', 'address', 'employee', 'entry'");
+        System.out.println("ENTITY: 'project', 'issue', 'employee', 'entry'");
         System.out.println("PARAMS:");
-        System.out.println("-project: "); // TODO
+        System.out.println("-project: NAME (string)");
         System.out.println("-issue: "); // TODO
-        System.out.println("-address: "); // TODO
         System.out.println("-employee: "); // TODO
         System.out.println("-entry: "); // TODO
         break;
       case "rm":
         System.out.println("Usage:  rm ENTITY PARAMS");
         System.out.println("Remove a specific entity");
-        System.out.println("ENTITY: 'project', 'issue', 'address', 'employee', 'entry'");
+        System.out.println("ENTITY: 'project', 'issue', 'employee', 'entry'");
         System.out.println("PARAMS:");
-        System.out.println("-project: "); // TODO
+        System.out.println("-project: ID (integer)");
         System.out.println("-issue: "); // TODO
-        System.out.println("-address: "); // TODO
         System.out.println("-employee: "); // TODO
         System.out.println("-entry: "); // TODO
         break;
       case "update":
         System.out.println("Usage:  update ENTITY PARAMS");
         System.out.println("Update a specific entity");
-        System.out.println("ENTITY: 'project', 'issue', 'address', 'employee', 'entry'");
+        System.out.println("ENTITY: 'project', 'issue', 'employee', 'entry'");
         System.out.println("PARAMS:");
-        System.out.println("-project: "); // TODO
+        System.out.println("-project: ID (integer) NAME (string)");
         System.out.println("-issue: "); // TODO
-        System.out.println("-address: "); // TODO
         System.out.println("-employee: "); // TODO
         System.out.println("-entry: "); // TODO
         break;

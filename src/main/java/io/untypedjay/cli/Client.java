@@ -1,5 +1,7 @@
 package io.untypedjay.cli;
 
+import io.untypedjay.services.ProjectService;
+import io.untypedjay.services.ProjectServiceImpl;
 import io.untypedjay.util.Printer;
 
 import java.io.BufferedReader;
@@ -7,6 +9,8 @@ import java.io.InputStreamReader;
 import java.time.Duration;
 
 public class Client {
+  private static ProjectService projectService = new ProjectServiceImpl();
+
   public static void main(String[] args) {
     BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
@@ -54,6 +58,7 @@ public class Client {
           } else {
             Printer.printInvalidCommandError(commands);
           }
+          break;
 
         case "help":
           if (commands.length >= 2) {
@@ -61,7 +66,6 @@ public class Client {
           } else {
             Printer.printHelpPage("");
           }
-
           break;
 
         default:
@@ -76,19 +80,16 @@ public class Client {
   private static void list(String[] commands) {
     switch (commands[1]) {
       case "projects":
-        // TODO
+        Printer.printProjects();
         break;
       case "issues":
-        // TODO
-        break;
-      case "addresses":
-        // TODO
+        Printer.printIssues();
         break;
       case "employees":
-        // TODO
+        Printer.printEmployees();
         break;
       case "entries":
-        // TODO
+        Printer.printLogbookEntries();
         break;
       default:
         Printer.printInvalidCommandError(commands);
@@ -99,12 +100,9 @@ public class Client {
   private static void make(String[] commands) {
     switch (commands[1]) {
       case "project":
-        // TODO
+        projectService.add(commands[2]);
         break;
       case "issue":
-        // TODO
-        break;
-      case "address":
         // TODO
         break;
       case "employee":
@@ -122,12 +120,9 @@ public class Client {
   private static void remove(String[] commands) {
     switch (commands[1]) {
       case "project":
-        // TODO
+        projectService.remove(Long.parseLong(commands[2]));
         break;
       case "issue":
-        // TODO
-        break;
-      case "address":
         // TODO
         break;
       case "employee":
@@ -145,12 +140,9 @@ public class Client {
   private static void update(String[] commands) {
     switch (commands[1]) {
       case "project":
-        // TODO
+        projectService.update(Long.parseLong(commands[2]), commands[3]);
         break;
       case "issue":
-        // TODO
-        break;
-      case "address":
         // TODO
         break;
       case "employee":

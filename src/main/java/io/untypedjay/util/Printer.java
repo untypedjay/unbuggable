@@ -5,8 +5,6 @@ import io.untypedjay.domain.Issue;
 import io.untypedjay.domain.LogbookEntry;
 import io.untypedjay.domain.Project;
 import io.untypedjay.services.*;
-
-import java.time.Duration;
 import java.util.List;
 
 public class Printer {
@@ -136,16 +134,5 @@ public class Printer {
         System.out.println("stats       see statistics");
         System.out.println("exit        quit application");
     }
-  }
-
-  public static String formatDuration(Duration duration) {
-    long seconds = duration.getSeconds();
-    long absSeconds = Math.abs(seconds);
-    String positive = String.format(
-      "%d:%02d:%02d",
-      absSeconds / 3600,
-      (absSeconds % 3600) / 60,
-      absSeconds % 60);
-    return seconds < 0 ? "-" + positive : positive;
   }
 }

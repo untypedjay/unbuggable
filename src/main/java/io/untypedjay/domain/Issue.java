@@ -18,9 +18,65 @@ public class Issue {
   @ManyToOne(fetch = FetchType.EAGER)
   private Employee assignee;
 
+  public Issue() { }
 
+  public Issue(Priority priority, Duration estimatedCompletionTime) {
+    this.state = State.NEW;
+    this.priority = priority;
+    this.estimatedCompletionTime = estimatedCompletionTime;
+    this.progress = 0.0;
+    this.assignee = null;
+  }
 
-  enum State {
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public State getState() {
+    return state;
+  }
+
+  public void setState(State state) {
+    this.state = state;
+  }
+
+  public Priority getPriority() {
+    return priority;
+  }
+
+  public void setPriority(Priority priority) {
+    this.priority = priority;
+  }
+
+  public Duration getEstimatedCompletionTime() {
+    return estimatedCompletionTime;
+  }
+
+  public void setEstimatedCompletionTime(Duration estimatedCompletionTime) {
+    this.estimatedCompletionTime = estimatedCompletionTime;
+  }
+
+  public double getProgress() {
+    return progress;
+  }
+
+  public void setProgress(double progress) {
+    this.progress = progress;
+  }
+
+  public Employee getAssignee() {
+    return assignee;
+  }
+
+  public void setAssignee(Employee assignee) {
+    this.assignee = assignee;
+  }
+
+  public enum State {
     NEW,
     OPEN,
     RESOLVED,
@@ -28,7 +84,7 @@ public class Issue {
     REJECTED
   }
 
-  enum Priority {
+  public enum Priority {
     LOW,
     NORMAL,
     HIGH

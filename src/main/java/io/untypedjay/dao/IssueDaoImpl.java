@@ -14,7 +14,7 @@ public class IssueDaoImpl implements IssueDao {
   }
 
   @Override
-  public Issue getEmployee(Long issueId) {
+  public Issue getIssue(Long issueId) {
     EntityManager em = JpaUtil.getEntityManager();
     return em.find(Issue.class, issueId);
   }

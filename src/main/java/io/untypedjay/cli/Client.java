@@ -1,15 +1,15 @@
 package io.untypedjay.cli;
 
-import io.untypedjay.services.ProjectService;
-import io.untypedjay.services.ProjectServiceImpl;
+import io.untypedjay.services.*;
 import io.untypedjay.util.Printer;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.time.Duration;
 
 public class Client {
   private static ProjectService projectService = new ProjectServiceImpl();
+  private static IssueService issueService = new IssueServiceImpl();
+  private static EmployeeService employeeService = new EmployeeServiceImpl();
+  private static LogbookEntryService logbookEntryService = new LogbookEntryServiceImpl();
 
   public static void main(String[] args) {
     BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -103,13 +103,13 @@ public class Client {
         projectService.add(commands[2]);
         break;
       case "issue":
-        // TODO
+        issueService.add(commands[2], commands[3]); // priority, estimated completion time
         break;
       case "employee":
-        // TODO
+        employeeService.add(commands[2], commands[3], commands[4]); // first, last, dob
         break;
       case "entry":
-        // TODO
+        logbookEntryService.add(commands[2], commands[3], commands[4]); // activity, start, end
         break;
       default:
         Printer.printInvalidCommandError(commands);
@@ -123,13 +123,13 @@ public class Client {
         projectService.remove(Long.parseLong(commands[2]));
         break;
       case "issue":
-        // TODO
+        issueService.remove(Long.parseLong(commands[2]));
         break;
       case "employee":
-        // TODO
+        employeeService.remove(Long.parseLong(commands[2]));
         break;
       case "entry":
-        // TODO
+        logbookEntryService.remove(Long.parseLong(commands[2]));
         break;
       default:
         Printer.printInvalidCommandError(commands);
@@ -166,12 +166,5 @@ public class Client {
     catch (Exception e) {
       return promptFor(in, p);
     }
-  }
-
-  private static Duration getDuration(int[] input) {
-    if (input.length != 3) {
-      return null;
-    }
-    return Duration.parse("PT" + input[0] + "H" + input[1] + "M" + input[2] + "S");
   }
 }

@@ -1,11 +1,9 @@
 package io.untypedjay.dao;
 
-import io.untypedjay.domain.Employee;
 import io.untypedjay.domain.Project;
 import io.untypedjay.util.JpaUtil;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class ProjectDaoImpl implements ProjectDao {

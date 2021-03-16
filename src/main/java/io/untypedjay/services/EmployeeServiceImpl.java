@@ -1,9 +1,7 @@
 package io.untypedjay.services;
 
 import io.untypedjay.dao.EmployeeDao;
-import io.untypedjay.dao.ProjectDao;
 import io.untypedjay.domain.Employee;
-import io.untypedjay.domain.Project;
 import io.untypedjay.util.PersistenceManager;
 
 import java.time.LocalDate;

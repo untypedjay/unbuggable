@@ -14,12 +14,7 @@ public class LogbookEntry {
   private LocalDateTime startTime;
   private LocalDateTime endTime;
 
-  // Fetching Strategies:
-  // FetchType.EAGER (default), FetchMode.JOIN (default): 1 join: fetch everything in first place
-  // FetchType.EAGER (default), FetchMode.SELECT // 2 selects: fetch LogbookEntry and using FK to fetch Employee
-  // FetchType.LAZY // 2 selects: like EAGER + SELECT but at different time (last possible time)
-
-  @org.hibernate.annotations.Fetch(FetchMode.JOIN) // hibernate specific
+  @org.hibernate.annotations.Fetch(FetchMode.JOIN)
   @ManyToOne(fetch = FetchType.EAGER)
   private Employee employee;
 

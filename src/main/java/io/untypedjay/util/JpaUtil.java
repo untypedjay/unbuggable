@@ -7,7 +7,7 @@ import javax.persistence.Persistence;
 
 public class JpaUtil {
   private static EntityManagerFactory emFactory;
-  private static ThreadLocal<EntityManager> emThread = new ThreadLocal<>(); // a local variable for each thread, because EntityManager is not thread safe
+  private static ThreadLocal<EntityManager> emThread = new ThreadLocal<>();
 
   public static synchronized EntityManagerFactory getEntityManagerFactory() {
     if (emFactory == null) {

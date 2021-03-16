@@ -2,7 +2,6 @@ package io.untypedjay.dao;
 
 import io.untypedjay.domain.LogbookEntry;
 import io.untypedjay.util.JpaUtil;
-import org.hibernate.annotations.common.util.impl.Log;
 
 import javax.persistence.EntityManager;
 import java.util.List;

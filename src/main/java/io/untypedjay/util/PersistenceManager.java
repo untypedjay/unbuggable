@@ -18,7 +18,6 @@ public class PersistenceManager {
 
   public void beginTransaction() {
     EntityManager em = JpaUtil.getTransactedEntityManager();
-    // TODO
   }
 
   public EmployeeDao getEmployeeDao() {

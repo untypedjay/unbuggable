@@ -7,7 +7,6 @@ import io.untypedjay.util.TimeUtil;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Locale;
 
 public class IssueServiceImpl implements IssueService {
   private static PersistenceManager persistenceManager = PersistenceManager.getInstance();

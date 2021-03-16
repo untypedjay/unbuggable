@@ -1,22 +1,18 @@
 package io.untypedjay.domain;
 
-import org.hibernate.annotations.FetchMode;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity // mandatory
-//@Inheritance(strategy = InheritanceType.JOINED) // allow inheritance; approach 1
-//@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) // approach 2
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // approach 3
-@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING) // approach 3
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("E")
 public class Employee {
-  @Id // direct access to fields
+  @Id
   @GeneratedValue(strategy = GenerationType.TABLE)
-  private Long id; // wrapper datentyp damit ID null sein kann
+  private Long id;
 
   @Column(length = 20)
   private String firstName;
@@ -27,33 +23,24 @@ public class Employee {
   @Column(nullable = false)
   private LocalDate dateOfBirth;
 
-  // Fetching Strategies:
-  // FetchType.LAZY (default): 2 selects (2nd as late as possible)
-  // FetchType.EAGER, FetchMode.SELECT: 2 selects right after each other
-  // FetchType.EAGER, FetchMode.JOIN: 2 selects
-
-  //@org.hibernate.annotations.Fetch(FetchMode.JOIN)
   @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
   private Set<LogbookEntry> logbookEntries = new HashSet<>();
 
-  //@OneToOne(cascade = CascadeType.ALL) // approach 2
-  @Embedded // approach 1
+  @Embedded
   @AttributeOverride(name = "zipCode", column = @Column(name="ADDR_ZIPCODE", length = 10))
   @AttributeOverride(name = "city", column = @Column(name="ADDR_CITY"))
   @AttributeOverride(name = "street", column = @Column(name="ADDR_STREET"))
   private Address address;
 
-  public Employee() {
-
-  }
+  public Employee() { }
 
   public Employee(String firstName, String lastName, LocalDate dateOfBirth) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.dateOfBirth = dateOfBirth;
   }
-  //@Id wäre sämtliche Operationen auf getter und setter
+
   public Long getId() {
     return id;
   }

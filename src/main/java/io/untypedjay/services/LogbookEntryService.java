@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface LogbookEntryService {
   List<LogbookEntry> getAll();
+  void add(String activity, String unparsedStartTime, String unparsedEndTime);
+  void remove(Long logbookEntryId);
 }

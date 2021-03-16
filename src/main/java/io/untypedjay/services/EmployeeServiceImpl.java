@@ -12,6 +12,7 @@ import java.util.List;
 
 public class EmployeeServiceImpl implements EmployeeService {
   private static PersistenceManager persistenceManager = PersistenceManager.getInstance();
+
   @Override
   public List<Employee> getAll() {
     List<Employee> employees;

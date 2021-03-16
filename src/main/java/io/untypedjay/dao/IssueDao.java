@@ -5,9 +5,9 @@ import io.untypedjay.domain.Issue;
 import java.util.List;
 
 public interface IssueDao {
-  public List<Issue> getAllIssues();
-  public Issue getEmployee(Long issueId);
-  public void addIssue(Issue issue);
-  public void updateIssue(Issue issue);
-  public void deleteIssue(Issue issue);
+  List<Issue> getAllIssues();
+  Issue getEmployee(Long issueId);
+  void addIssue(Issue issue);
+  void updateIssue(Issue issue);
+  void deleteIssue(Issue issue);
 }

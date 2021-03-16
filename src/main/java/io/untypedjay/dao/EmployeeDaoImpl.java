@@ -15,23 +15,25 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
   @Override
   public Employee getEmployee(Long employeeId) {
-    // TODO
-    return null;
+    EntityManager em = JpaUtil.getEntityManager();
+    return em.find(Employee.class, employeeId);
   }
 
   @Override
   public void addEmployee(Employee employee) {
-    // TODO
+    EntityManager em = JpaUtil.getEntityManager();
+    em.persist(employee);
   }
 
   @Override
   public void updateEmployee(Employee employee) {
-    // TODO
+    EntityManager em = JpaUtil.getEntityManager();
+    em.merge(employee);
   }
 
   @Override
   public void deleteEmployee(Employee employee) {
-    // TODO
+    EntityManager em = JpaUtil.getEntityManager();
+    em.remove(employee);
   }
-
 }

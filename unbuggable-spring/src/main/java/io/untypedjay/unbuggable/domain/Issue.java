@@ -12,19 +12,18 @@ public class Issue {
   private Long id;
   private State state;
   private Priority priority;
-  private Duration estimatedCompletionTime;
-  private double progress;
+  private Duration estimatedTime;
+  private Duration expendedTime = Duration.ofSeconds(0);
   @org.hibernate.annotations.Fetch(FetchMode.JOIN)
   @ManyToOne(fetch = FetchType.EAGER)
   private Employee assignee;
 
   public Issue() { }
 
-  public Issue(Priority priority, Duration estimatedCompletionTime) {
+  public Issue(Priority priority, Duration estimatedTime) {
     this.state = State.NEW;
     this.priority = priority;
-    this.estimatedCompletionTime = estimatedCompletionTime;
-    this.progress = 0.0;
+    this.estimatedTime = estimatedTime;
     this.assignee = null;
   }
 
@@ -52,20 +51,20 @@ public class Issue {
     this.priority = priority;
   }
 
-  public Duration getEstimatedCompletionTime() {
-    return estimatedCompletionTime;
+  public Duration getEstimatedTime() {
+    return estimatedTime;
   }
 
-  public void setEstimatedCompletionTime(Duration estimatedCompletionTime) {
-    this.estimatedCompletionTime = estimatedCompletionTime;
+  public void setEstimatedTime(Duration estimatedTime) {
+    this.estimatedTime = estimatedTime;
   }
 
-  public double getProgress() {
-    return progress;
+  public Duration getExpendedTime() {
+    return expendedTime;
   }
 
-  public void setProgress(double progress) {
-    this.progress = progress;
+  public void setExpendedTime(Duration expendedTime) {
+    this.expendedTime = expendedTime;
   }
 
   public Employee getAssignee() {

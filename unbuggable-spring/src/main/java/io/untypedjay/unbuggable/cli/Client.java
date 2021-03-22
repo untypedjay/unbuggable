@@ -114,12 +114,14 @@ public class Client {
   private static void list(String[] commands) {
     switch (commands[1]) {
       case "project":
-        if (commands.length == 2) {
+        if (commands.length == 2) { // list project
           Printer.printProjects(emf);
-        } else if (commands.length == 3) {
-          Printer.printProjectIssues(Integer.parseInt(commands[2]));
-        } else if (commands.length == 5) {
-          Printer.printProjectIssuesByEmployee(Integer.parseInt(commands[2]), Integer.parseInt(commands[4]));
+        } else if (commands.length == 3) { // list project ID
+          Printer.printEmployeesOfProject(emf, Long.parseLong(commands[2]));
+        } else if (commands.length == 4) { // list project ID -I
+          Printer.printProjectIssues(emf, Long.parseLong(commands[2]));
+        } else if (commands.length == 5) { // list project ID -E ID
+          Printer.printProjectIssuesByEmployee(emf, Long.parseLong(commands[2]), Long.parseLong(commands[4]));
         } else {
           Printer.printInvalidCommandError(commands);
         }

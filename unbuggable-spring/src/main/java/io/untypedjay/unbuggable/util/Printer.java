@@ -7,6 +7,7 @@ import io.untypedjay.unbuggable.domain.Project;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
+import java.util.Set;
 
 public class Printer {
   public static void printInvalidCommandError(String[] commandArray) {
@@ -25,11 +26,26 @@ public class Printer {
     });
   }
 
-  public static void printProjectIssues(int projectId) {
+  public static void printEmployeesOfProject(EntityManagerFactory emf, Long projectId) {
+    JpaUtil.executeInTransaction(emf, () -> {
+      ProjectRepository projectRepo = JpaUtil.getJpaRepository(emf, ProjectRepository.class);
+      System.out.println("ID    NAME    DATE OF BIRTH");
+      Project project = projectRepo.getOne(projectId);
+      Set<Employee> members = project.getEmployees();
+      for (var member : members) {
+        System.out.print(member.getId() + "   ");
+        System.out.print(member.getFirstName() + " " + member.getLastName() + "   ");
+        System.out.print(member.getDateOfBirth() + "    ");
+        System.out.println();
+      }
+    });
+  }
+
+  public static void printProjectIssues(EntityManagerFactory emf, Long projectId) {
     // TODO list remaining and completed time for project
   }
 
-  public static void printProjectIssuesByEmployee(int projectId, int employeeId) {
+  public static void printProjectIssuesByEmployee(EntityManagerFactory emf, Long projectId, Long employeeId) {
     // TODO filter by status
   }
 
@@ -55,7 +71,7 @@ public class Printer {
         System.out.println("ENTITY: 'project', 'employee',");
         System.out.println("list employee: list all employees");
         System.out.println("list project [ID] [PROJECT_OPTIONS]: list all or specific projects");
-        System.out.println("  PROJECT_OPTIONS: -E EMPLOYEE_ID (list issues in project by employee");
+        System.out.println("  PROJECT_OPTIONS: -I (list issues in project), -E EMPLOYEE_ID (list issues in project by employee)");
         break;
       case "new":
         System.out.println("Usage:  new ENTITY PARAMS");

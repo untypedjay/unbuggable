@@ -70,6 +70,7 @@ public class Printer {
         System.out.println("Usage: add SUBJECT ID TARGET ID");
         System.out.println("Add SUBJECT to TARGET");
         System.out.println("-add employee ID project ID: add employee to project");
+        System.out.println("-add issue ID employee ID: assign issue to employee");
         break;
       case "delete":
         System.out.println("Usage:  delete ENTITY ID");
@@ -86,7 +87,6 @@ public class Printer {
         System.out.println("Update an issue");
         System.out.println("PARAMS:");
         System.out.println("-T TIME (hh:mm:ss): add spent time");
-        System.out.println("-A EMPLOYEE_ID (integer): assign employee");
         System.out.println("-E TIME (hh:mm:ss): update estimation");
         System.out.println("-S STATUS ('NEW', 'OPEN', 'RESOLVED', 'CLOSED', 'REJECTED'): update status");
         break;

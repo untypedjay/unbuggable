@@ -172,6 +172,16 @@ public class Client {
         emplRepo.saveAndFlush(employee);
         projectRepo.saveAndFlush(project);
       });
+    } else if (commands[1].equals("issue") && commands[3].equals("employee")) {
+      JpaUtil.executeInTransaction(emf, () -> {
+        IssueRepository issueRepo = JpaUtil.getJpaRepository(emf, IssueRepository.class);
+        EmployeeRepository emplRepo = JpaUtil.getJpaRepository(emf, EmployeeRepository.class);
+        Issue issue = issueRepo.getOne(Long.parseLong(commands[2]));
+        Employee employee = emplRepo.getOne(Long.parseLong(commands[4]));
+        issue.setAssignee(employee);
+        issueRepo.saveAndFlush(issue);
+        emplRepo.saveAndFlush(employee);
+      });
     } else {
       Printer.printInvalidCommandError(commands);
     }
@@ -224,12 +234,10 @@ public class Client {
       case "issue":
         if (commands[3] == "-T") {
           // TODO add spent time
-        } else if (commands[3] == "-A") {
-          // TODO assign issue to employee
         } else if (commands[3] == "-E") {
           // TODO update estimate
         } else if (commands[3] == "-S") {
-          // TODO update status
+          // TODO update state
         } else {
           Printer.printInvalidCommandError(commands);
         }

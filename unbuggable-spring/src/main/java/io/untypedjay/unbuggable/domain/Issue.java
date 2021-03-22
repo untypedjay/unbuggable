@@ -95,6 +95,10 @@ public class Issue {
     this.assignee = assignee;
   }
 
+  public void addTime(Duration time) {
+    this.expendedTime = this.expendedTime.plus(time);
+  }
+
   public enum State {
     NEW,
     OPEN,

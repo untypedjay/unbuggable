@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 
 import static io.untypedjay.unbuggable.util.Converter.toLocalDate;
+import static io.untypedjay.unbuggable.util.TimeUtil.parseDuration;
 
 public class Client {
   private final static String CONFIG_LOCATION = "io/untypedjay/unbuggable/test/applicationContext-jpa1.xml";
@@ -232,12 +233,24 @@ public class Client {
   private static void update(String[] commands) {
     switch (commands[1]) {
       case "issue":
-        if (commands[3] == "-T") {
-          // TODO add spent time
-        } else if (commands[3] == "-E") {
-          // TODO update estimate
-        } else if (commands[3] == "-S") {
-          // TODO update state
+        if (commands[3].equals("-T")) {
+          JpaUtil.executeInTransaction(emf, () -> {
+            IssueRepository issueRepo = JpaUtil.getJpaRepository(emf, IssueRepository.class);
+            Issue issue = issueRepo.getOne(Long.parseLong(commands[2]));
+            issue.addTime(parseDuration(commands[4]));
+          });
+        } else if (commands[3].equals("-E")) {
+          JpaUtil.executeInTransaction(emf, () -> {
+            IssueRepository issueRepo = JpaUtil.getJpaRepository(emf, IssueRepository.class);
+            Issue issue = issueRepo.getOne(Long.parseLong(commands[2]));
+            issue.setEstimatedTime(parseDuration(commands[4]));
+          });
+        } else if (commands[3].equals("-S")) {
+          JpaUtil.executeInTransaction(emf, () -> {
+            IssueRepository issueRepo = JpaUtil.getJpaRepository(emf, IssueRepository.class);
+            Issue issue = issueRepo.getOne(Long.parseLong(commands[2]));
+            issue.setState(Issue.State.valueOf(commands[4].toUpperCase()));
+          });
         } else {
           Printer.printInvalidCommandError(commands);
         }

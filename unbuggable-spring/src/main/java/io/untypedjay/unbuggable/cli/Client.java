@@ -1,6 +1,7 @@
 package io.untypedjay.unbuggable.cli;
 
 import io.untypedjay.unbuggable.dao.EmployeeRepository;
+import io.untypedjay.unbuggable.dao.IssueRepository;
 import io.untypedjay.unbuggable.dao.ProjectRepository;
 import io.untypedjay.unbuggable.domain.Employee;
 import io.untypedjay.unbuggable.domain.Project;
@@ -147,7 +148,16 @@ public class Client {
         });
         break;
       case "issue":
-        // TODO issueService.remove(Long.parseLong(commands[2]));
+        JpaUtil.executeInTransaction(emf, () -> {
+          IssueRepository issueRepo = JpaUtil.getJpaRepository(emf, IssueRepository.class);
+          issueRepo.delete(issueRepo.getOne(Long.parseLong(commands[2])));
+        });
+        break;
+      case "employee":
+        JpaUtil.executeInTransaction(emf, () -> {
+          EmployeeRepository emplRepo = JpaUtil.getJpaRepository(emf, EmployeeRepository.class);
+          emplRepo.delete(emplRepo.getOne(Long.parseLong(commands[2])));
+        });
         break;
       default:
         Printer.printInvalidCommandError(commands);

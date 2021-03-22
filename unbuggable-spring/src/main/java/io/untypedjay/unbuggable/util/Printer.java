@@ -69,7 +69,7 @@ public class Printer {
       case "remove":
         System.out.println("Usage:  remove ENTITY ID");
         System.out.println("Remove a specific entity");
-        System.out.println("ENTITY: 'project', 'issue'");
+        System.out.println("ENTITY: 'project', 'issue', 'employee'");
         break;
       case "update":
         System.out.println("Usage:  update issue ID PARAMS");

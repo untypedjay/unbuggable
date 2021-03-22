@@ -10,7 +10,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import io.untypedjay.unbuggable.dao.EmployeeDao;
 import io.untypedjay.unbuggable.dao.EmployeeRepository;
 import io.untypedjay.unbuggable.domain.Employee;
 import io.untypedjay.unbuggable.util.DbScriptRunner;
@@ -35,92 +34,9 @@ public class DbTest {
     }
   }
 
-  private static void testJdbc() {
-
-		try (AbstractApplicationContext factory =
-			new ClassPathXmlApplicationContext(
-        "io/untypedjay/unbuggable/test/applicationContext-jdbc.xml")) {
-
-      printTitle("create schema", 60, '-');
-			createSchema(factory.getBean("dataSource", DataSource.class),
-        "io/untypedjay/unbuggable/test/CreateWorklogDbSchema.sql");
-
-			//
-			// get reference to implementation of EmployeeDao
-			//
-
-      EmployeeDao emplDao = factory.getBean("employeeDaoJdbc", EmployeeDao.class);
-
-      printTitle("insert employee", 60, '-');
-      Employee empl1 = new Employee("Josefine", "Feichtlbauer", LocalDate.of(1970, 10, 26));
-      emplDao.insert(empl1);
-      System.out.println("empl1 = " + (empl1 == null ? (null) : empl1.toString()));
-
-      Employee empl2 = new Employee("Franz", "Heinzelmayr", LocalDate.of(1975, 9, 20));
-      emplDao.insert(empl2);
-      System.out.println("empl2 = " + (empl2 == null ? (null) : empl2.toString()));
-
-      printTitle("update employee", 60, '-');
-      empl1.setFirstName("Jaquira");
-      empl1 = emplDao.merge(empl1);
-      System.out.println("empl1 = " + (empl1 == null ? (null) : empl1.toString()));
-
-      printTitle("find employee", 60, '-');
-    	Employee empl = emplDao.findById(1L);
-    	System.out.println("empl=" + (empl == null ? (null) : empl.toString()));
-    	empl = emplDao.findById(100L);
-    	System.out.println("empl=" + (empl == null ? (null) : empl.toString()));
-
-      printTitle("find all employees", 60, '-');
-      emplDao.findAll().forEach(System.out::println);
-		}
-  }
-
-  @SuppressWarnings("unused")
-  private static void testJpa() {
-    try (AbstractApplicationContext factory = new ClassPathXmlApplicationContext(
-      "io/untypedjay/unbuggable/test/applicationContext-jpa1.xml")) {
-      EntityManagerFactory emf = factory.getBean(EntityManagerFactory.class);
-      EmployeeDao emplDao = factory.getBean("employeeDaoJpa", EmployeeDao.class);
-
-      //JpaUtil.beginTransaction(emf);
-
-
-
-      JpaUtil.executeInTransaction(emf, () -> {
-        Employee empl1 = new Employee("Josefine", "Feichtlbauer", LocalDate.of(1970, 10, 26));
-        printTitle("insert employee", 60, '-');
-        emplDao.insert(empl1);
-        System.out.println("empl1 = " + (empl1 == null ? (null) : empl1.toString()));
-
-        Employee empl2 = new Employee("Franz", "Heinzelmayr", LocalDate.of(1975, 9, 20));
-        emplDao.insert(empl2);
-        System.out.println("empl2 = " + (empl2 == null ? (null) : empl2.toString()));
-
-        printTitle("update employee", 60, '-');
-        empl1.setFirstName("Jaquira");
-        empl1 = emplDao.merge(empl1);
-        System.out.println("empl1 = " + (empl1 == null ? (null) : empl1.toString()));
-      });
-
-      //JpaUtil.commitTransaction(emf);
-
-      JpaUtil.executeInTransaction(emf, () -> {
-        printTitle("find employee", 60, '-');
-        Employee empl = emplDao.findById(1L);
-        System.out.println("empl=" + (empl == null ? (null) : empl.toString()));
-        empl = emplDao.findById(100L);
-        System.out.println("empl=" + (empl == null ? (null) : empl.toString()));
-
-        printTitle("find all employees", 60, '-');
-        emplDao.findAll().forEach(System.out::println);
-      });
-    }
-  }
-
   @SuppressWarnings("unused")
   private static void testSpringData() {
-    try (AbstractApplicationContext factory = new ClassPathXmlApplicationContext(
+    try (AbstractApplicationContext factory = new ClassPathXmlApplicationContext (
       "io/untypedjay/unbuggable/test/applicationContext-jpa1.xml")) {
       EntityManagerFactory emf = factory.getBean(EntityManagerFactory.class);
       JpaUtil.executeInTransaction(emf, () -> {

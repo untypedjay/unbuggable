@@ -1,25 +1,29 @@
 package io.untypedjay.unbuggable.util;
 
+import io.untypedjay.unbuggable.dao.EmployeeRepository;
 import io.untypedjay.unbuggable.domain.Employee;
-import io.untypedjay.unbuggable.domain.Issue;
-import io.untypedjay.unbuggable.domain.LogbookEntry;
-import io.untypedjay.unbuggable.domain.Project;
-
+import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
 public class Printer {
-
   public static void printInvalidCommandError(String[] commandArray) {
     System.out.println("'" + String.join(" ", commandArray) + "' is not a valid command");
     System.out.println("See 'help'");
   }
 
   public static void printProjects() {
-    System.out.println("ID    NAME");
-    // TODO
-//    List<Project> projects = projectService.getAll();
-//    for (var project : projects) {
-//      System.out.println(project.getId() + "    " + project.getName());
+//    try (AbstractApplicationContext factory = new ClassPathXmlApplicationContext(
+//      "io/untypedjay/unbuggable/test/applicationContext-jpa1.xml")) {
+//      EntityManagerFactory emf = factory.getBean(EntityManagerFactory.class);
+//      JpaUtil.executeInTransaction(emf, () -> {
+//        EmployeeRepository emplRepo = JpaUtil.getJpaRepository(emf, EmployeeRepository.class);
+//        System.out.println("ID    NAME");
+//          // TODO
+//      List<Project> projects = emplRepo.findAll();
+//      for (var project : projects) {
+//        System.out.println(project.getId() + "    " + project.getName());
+//      }
+//      });
 //    }
   }
 
@@ -31,17 +35,18 @@ public class Printer {
     // TODO filter by status
   }
 
-  public static void printEmployees() {
-    System.out.println("ID    NAME    DATE OF BIRTH");
-    // TODO
-//    List<Employee> employees = employeeService.getAll();
-//    for (var employee : employees) {
-//      System.out.print(employee.getId() + "   ");
-//      System.out.print(employee.getFirstName() + " " + employee.getLastName() + "   ");
-//      System.out.print(employee.getDateOfBirth() + "    ");
-//      System.out.print(employee.getAddress());
-//      System.out.println();
-//    }
+  public static void printEmployees(EntityManagerFactory emf) {
+    JpaUtil.executeInTransaction(emf, () -> {
+      EmployeeRepository emplRepo = JpaUtil.getJpaRepository(emf, EmployeeRepository.class);
+      System.out.println("ID    NAME    DATE OF BIRTH");
+      List<Employee> employees = emplRepo.findAll();
+      for (var employee : employees) {
+        System.out.print(employee.getId() + "   ");
+        System.out.print(employee.getFirstName() + " " + employee.getLastName() + "   ");
+        System.out.print(employee.getDateOfBirth() + "    ");
+        System.out.println();
+      }
+    });
   }
 
   public static void printHelpPage(String command) {

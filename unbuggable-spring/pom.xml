@@ -313,7 +313,7 @@
         <configuration>
           <derbyHome>${project.basedir}/data</derbyHome>
           <port>1527</port>
-          <database>WorklogDb</database>
+          <database>UnbuggableDb</database>
         </configuration>
       </plugin>
       <!-- run with: - mvn exec:java@DbTest, - mvn exec:java@LogicTest,

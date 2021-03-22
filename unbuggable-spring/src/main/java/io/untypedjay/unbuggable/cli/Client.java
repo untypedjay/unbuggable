@@ -1,65 +1,93 @@
 package io.untypedjay.unbuggable.cli;
 
+import io.untypedjay.unbuggable.dao.EmployeeRepository;
+import io.untypedjay.unbuggable.domain.Employee;
+import io.untypedjay.unbuggable.util.JpaUtil;
 import io.untypedjay.unbuggable.util.Printer;
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import javax.persistence.EntityManagerFactory;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
+
+import static io.untypedjay.unbuggable.util.Converter.toLocalDate;
 
 public class Client {
+  private final static String CONFIG_LOCATION = "io/untypedjay/unbuggable/test/applicationContext-jpa1.xml";
+  private static EntityManagerFactory emf;
+
   public static void main(String[] args) {
-    BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+    try (AbstractApplicationContext factory = new ClassPathXmlApplicationContext (CONFIG_LOCATION)) {
+      emf = factory.getBean(EntityManagerFactory.class);
+      seedDatabase();
+      BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-    String[] commands = promptFor(in, "").split(" ");
+      String[] commands = promptFor(in, "").split(" ");
 
-    while (!commands[0].equals("exit")) {
-      switch (commands[0]) {
-        case "list":
-          if (commands.length > 1) {
-            list(commands);
-          } else {
+      while (!commands[0].equals("exit")) {
+        switch (commands[0]) {
+          case "list":
+            if (commands.length > 1) {
+              list(commands);
+            } else {
+              Printer.printInvalidCommandError(commands);
+            }
+            break;
+
+          case "add":
+            if (commands.length > 2 && commands.length < 6) {
+              add(commands);
+            } else {
+              Printer.printInvalidCommandError(commands);
+            }
+            break;
+
+          case "remove":
+            if (commands.length == 3) {
+              remove(commands);
+            } else {
+              Printer.printInvalidCommandError(commands);
+            }
+            break;
+
+          case "update":
+            if (commands.length == 5) {
+              update(commands);
+            } else {
+              Printer.printInvalidCommandError(commands);
+            }
+            break;
+
+          case "help":
+            if (commands.length >= 2) {
+              Printer.printHelpPage(commands[1]);
+            } else {
+              Printer.printHelpPage("");
+            }
+            break;
+
+          default:
             Printer.printInvalidCommandError(commands);
-          }
-          break;
+            break;
+        }
 
-        case "add":
-          if (commands.length > 2 && commands.length < 6) {
-            add(commands);
-          } else {
-            Printer.printInvalidCommandError(commands);
-          }
-          break;
-
-        case "remove":
-          if (commands.length == 3) {
-            remove(commands);
-          } else {
-            Printer.printInvalidCommandError(commands);
-          }
-          break;
-
-        case "update":
-          if (commands.length == 5) {
-            update(commands);
-          } else {
-            Printer.printInvalidCommandError(commands);
-          }
-          break;
-
-        case "help":
-          if (commands.length >= 2) {
-            Printer.printHelpPage(commands[1]);
-          } else {
-            Printer.printHelpPage("");
-          }
-          break;
-
-        default:
-          Printer.printInvalidCommandError(commands);
-          break;
+        commands = promptFor(in, "").split(" ");
       }
-
-      commands = promptFor(in, "").split(" ");
     }
+  }
+
+  private static void seedDatabase() {
+    JpaUtil.executeInTransaction(emf, () -> {
+      EmployeeRepository emplRepo = JpaUtil.getJpaRepository(emf, EmployeeRepository.class);
+
+      Employee empl1 = new Employee("Josefine", "Feichtlbauer", LocalDate.of(1970, 10, 26));
+      Employee empl2 = new Employee("Franz", "Heinzelmayr", LocalDate.of(1975, 9, 20));
+      emplRepo.save(empl1);
+      emplRepo.save(empl2);
+      emplRepo.flush();
+    });
   }
 
   private static void list(String[] commands) {
@@ -77,7 +105,7 @@ public class Client {
 
         break;
       case "employee":
-        Printer.printEmployees();
+        Printer.printEmployees(emf);
         break;
       default:
         Printer.printInvalidCommandError(commands);
@@ -94,7 +122,10 @@ public class Client {
         //TODO issueService.add(commands[2], commands[3]); // priority, estimated completion time
         break;
       case "employee":
-        // TODO employeeService.add(commands[2], commands[3], commands[4]); // first, last, dob
+        JpaUtil.executeInTransaction(emf, () -> {
+          EmployeeRepository emplRepo = JpaUtil.getJpaRepository(emf, EmployeeRepository.class);
+          emplRepo.saveAndFlush(new Employee(commands[2], commands[3], toLocalDate(commands[4])));
+        });
         break;
       default:
         Printer.printInvalidCommandError(commands);

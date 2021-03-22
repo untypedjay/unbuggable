@@ -29,10 +29,10 @@
 		<property name="dataSource" ref="dataSource"/>
 	</bean>
 
-	<bean id="employeeDaoJdbc" class="io.untypedjay.unbuggable.dao.jdbc.EmployeeDaoJdbc">
-		<property name="dataSource" ref="dataSource"/>
-		<property name="jdbcTemplate" ref="jdbcTemplate"/>
-	</bean>
+<!--	<bean id="employeeDaoJdbc" class="io.untypedjay.unbuggable.dao.jdbc.EmployeeDaoJdbc">-->
+<!--		<property name="dataSource" ref="dataSource"/>-->
+<!--		<property name="jdbcTemplate" ref="jdbcTemplate"/>-->
+<!--	</bean>-->
 
 	<!-- ========================= BUSINESS OBJECT DEFINIONS ========================= -->
 

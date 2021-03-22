@@ -1,7 +1,9 @@
 package io.untypedjay.unbuggable.cli;
 
 import io.untypedjay.unbuggable.dao.EmployeeRepository;
+import io.untypedjay.unbuggable.dao.ProjectRepository;
 import io.untypedjay.unbuggable.domain.Employee;
+import io.untypedjay.unbuggable.domain.Project;
 import io.untypedjay.unbuggable.util.JpaUtil;
 import io.untypedjay.unbuggable.util.Printer;
 import org.springframework.context.support.AbstractApplicationContext;
@@ -94,7 +96,7 @@ public class Client {
     switch (commands[1]) {
       case "project":
         if (commands.length == 2) {
-          Printer.printProjects();
+          Printer.printProjects(emf);
         } else if (commands.length == 3) {
           Printer.printProjectIssues(Integer.parseInt(commands[2]));
         } else if (commands.length == 5) {
@@ -116,7 +118,10 @@ public class Client {
   private static void add(String[] commands) {
     switch (commands[1]) {
       case "project":
-        //TODO projectService.add(commands[2]);
+        JpaUtil.executeInTransaction(emf, () -> {
+          ProjectRepository projectRepo = JpaUtil.getJpaRepository(emf, ProjectRepository.class);
+          projectRepo.saveAndFlush(new Project(commands[2]));
+        });
         break;
       case "issue":
         //TODO issueService.add(commands[2], commands[3]); // priority, estimated completion time
@@ -136,7 +141,10 @@ public class Client {
   private static void remove(String[] commands) {
     switch (commands[1]) {
       case "project":
-        //TODO projectService.remove(Long.parseLong(commands[2]));
+        JpaUtil.executeInTransaction(emf, () -> {
+          ProjectRepository projectRepo = JpaUtil.getJpaRepository(emf, ProjectRepository.class);
+          projectRepo.delete(projectRepo.getOne(Long.parseLong(commands[2])));
+        });
         break;
       case "issue":
         // TODO issueService.remove(Long.parseLong(commands[2]));

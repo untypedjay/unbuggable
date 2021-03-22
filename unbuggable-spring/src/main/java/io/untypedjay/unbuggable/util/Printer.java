@@ -1,7 +1,10 @@
 package io.untypedjay.unbuggable.util;
 
 import io.untypedjay.unbuggable.dao.EmployeeRepository;
+import io.untypedjay.unbuggable.dao.ProjectRepository;
 import io.untypedjay.unbuggable.domain.Employee;
+import io.untypedjay.unbuggable.domain.Project;
+
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
@@ -11,20 +14,15 @@ public class Printer {
     System.out.println("See 'help'");
   }
 
-  public static void printProjects() {
-//    try (AbstractApplicationContext factory = new ClassPathXmlApplicationContext(
-//      "io/untypedjay/unbuggable/test/applicationContext-jpa1.xml")) {
-//      EntityManagerFactory emf = factory.getBean(EntityManagerFactory.class);
-//      JpaUtil.executeInTransaction(emf, () -> {
-//        EmployeeRepository emplRepo = JpaUtil.getJpaRepository(emf, EmployeeRepository.class);
-//        System.out.println("ID    NAME");
-//          // TODO
-//      List<Project> projects = emplRepo.findAll();
-//      for (var project : projects) {
-//        System.out.println(project.getId() + "    " + project.getName());
-//      }
-//      });
-//    }
+  public static void printProjects(EntityManagerFactory emf) {
+    JpaUtil.executeInTransaction(emf, () -> {
+      ProjectRepository projectRepo = JpaUtil.getJpaRepository(emf, ProjectRepository.class);
+      System.out.println("ID    NAME");
+      List<Project> projects = projectRepo.findAll();
+      for (var project : projects) {
+        System.out.println(project.getId() + "    " + project.getName());
+      }
+    });
   }
 
   public static void printProjectIssues(int projectId) {

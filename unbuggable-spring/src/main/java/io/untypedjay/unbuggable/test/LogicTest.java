@@ -85,13 +85,13 @@ public class LogicTest {
 		
   public static void main(String[] args) {
   	
-  	printSeparator(60); 
-  	printTitle("testBusinessLogicWithJpaDaos", 60); 
-  	printSeparator(60);
-    testBusinessLogicWithJpaDaos();
+//  	printSeparator(60);
+//  	printTitle("testBusinessLogicWithJpaDaos", 60);
+//  	printSeparator(60);
+//    testBusinessLogicWithJpaDaos();
     
-//  	printSeparator(60); 
-//  	printTitle("testBusinessLogicWithSpringDataRepositories", 60); 
+//  	printSeparator(60);
+//  	printTitle("testBusinessLogicWithSpringDataRepositories", 60);
 //  	printSeparator(60);
 //    testBusinessLogicWithSpringDataRepositories();
   }

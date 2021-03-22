@@ -158,11 +158,11 @@ public class DbTest {
   }
 
   public static void main(String[] args) {
-  	printSeparator(60); printTitle("testJDBC", 60); printSeparator(60);
-    testJdbc();
-
-  	printSeparator(60); printTitle("testJpa", 60); printSeparator(60);
-    testJpa();
+//  	printSeparator(60); printTitle("testJDBC", 60); printSeparator(60);
+//    testJdbc();
+//
+//  	printSeparator(60); printTitle("testJpa", 60); printSeparator(60);
+//    testJpa();
 
   	printSeparator(60); printTitle("testSpringData", 60); printSeparator(60);
     testSpringData();

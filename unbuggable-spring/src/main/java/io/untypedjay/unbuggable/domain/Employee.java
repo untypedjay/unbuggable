@@ -5,12 +5,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 @Entity
 public class Employee implements Serializable {
@@ -28,6 +23,9 @@ public class Employee implements Serializable {
   @OneToMany(mappedBy="employee", cascade=CascadeType.ALL, fetch=FetchType.LAZY, 
              orphanRemoval=true) 
   private Set<LogbookEntry> logbookEntries = new HashSet<>();
+
+  @ManyToMany
+  private Set<Project> projects = new HashSet<>();
 
   public Employee() {  
   }
@@ -77,7 +75,15 @@ public class Employee implements Serializable {
   public void setLogbookEntries(Set<LogbookEntry> logbookEntries) {
     this.logbookEntries = logbookEntries;
   }
-  
+
+  public Set<Project> getProjects() {
+    return projects;
+  }
+
+  public void setProjects(Set<Project> projects) {
+    this.projects = projects;
+  }
+
   public void addLogbookEntry(LogbookEntry entry) {
     if (entry.getEmployee() != null)
        entry.getEmployee().logbookEntries.remove(entry);
@@ -87,6 +93,16 @@ public class Employee implements Serializable {
 
   public void removeLogbookEntry(LogbookEntry entry) {
     this.logbookEntries.remove(entry);
+  }
+
+  public void addProject(Project project) {
+    this.projects.add(project);
+    project.getEmployees().add(this);
+  }
+
+  public void removeProject(Project project) {
+    this.projects.remove(project);
+    project.getEmployees().remove(this);
   }
 
 	public String toString() {

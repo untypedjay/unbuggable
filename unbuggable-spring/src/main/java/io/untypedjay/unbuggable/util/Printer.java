@@ -57,8 +57,8 @@ public class Printer {
         System.out.println("list project [ID] [PROJECT_OPTIONS]: list all or specific projects");
         System.out.println("  PROJECT_OPTIONS: -E EMPLOYEE_ID (list issues in project by employee");
         break;
-      case "add":
-        System.out.println("Usage:  add ENTITY PARAMS");
+      case "new":
+        System.out.println("Usage:  new ENTITY PARAMS");
         System.out.println("Create a new entity");
         System.out.println("ENTITY: 'project', 'issue', 'employee'");
         System.out.println("PARAMS:");
@@ -66,10 +66,20 @@ public class Printer {
         System.out.println("-issue: NAME (string), PRIORITY ('LOW' | 'NORMAL' | 'HIGH'), ESTIMATED COMPLETION TIME (hh:mm:ss)");
         System.out.println("-employee: FIRST NAME (string), LAST NAME (string), DATE OF BIRTH (dd:mm:yyyy) | EMPLOYEE_ID (integer) -P PROJECT_ID (integer)");
         break;
-      case "remove":
-        System.out.println("Usage:  remove ENTITY ID");
-        System.out.println("Remove a specific entity");
+      case "add":
+        System.out.println("Usage: add SUBJECT ID TARGET ID");
+        System.out.println("Add SUBJECT to TARGET");
+        System.out.println("-add employee ID project ID: add employee to project");
+        break;
+      case "delete":
+        System.out.println("Usage:  delete ENTITY ID");
+        System.out.println("Delete a specific entity");
         System.out.println("ENTITY: 'project', 'issue', 'employee'");
+        break;
+      case "remove":
+        System.out.println("Usage: remove SUBJECT ID TARGET ID");
+        System.out.println("Remove SUBJECT from TARGET");
+        System.out.println("-remove employee ID project ID: remove employee from project");
         break;
       case "update":
         System.out.println("Usage:  update issue ID PARAMS");
@@ -86,8 +96,10 @@ public class Printer {
         break;
       default:
         System.out.println("list        list entities");
-        System.out.println("add         new entity");
-        System.out.println("remove      remove entity");
+        System.out.println("new         new entity");
+        System.out.println("add         add entity to another");
+        System.out.println("delete      delete entity");
+        System.out.println("remove      remove entity from another");
         System.out.println("update      update entity");
         System.out.println("exit        quit application");
     }

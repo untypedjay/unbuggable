@@ -39,16 +39,32 @@ public class Client {
             }
             break;
 
-          case "add":
+          case "new":
             if (commands.length > 2 && commands.length < 6) {
+              newEntity(commands);
+            } else {
+              Printer.printInvalidCommandError(commands);
+            }
+            break;
+
+          case "add":
+            if (commands.length == 5) {
               add(commands);
             } else {
               Printer.printInvalidCommandError(commands);
             }
             break;
 
-          case "remove":
+          case "delete":
             if (commands.length == 3) {
+              delete(commands);
+            } else {
+              Printer.printInvalidCommandError(commands);
+            }
+            break;
+
+          case "remove":
+            if (commands.length == 5) {
               remove(commands);
             } else {
               Printer.printInvalidCommandError(commands);
@@ -116,7 +132,7 @@ public class Client {
     }
   }
 
-  private static void add(String[] commands) {
+  private static void newEntity(String[] commands) {
     switch (commands[1]) {
       case "project":
         JpaUtil.executeInTransaction(emf, () -> {
@@ -139,7 +155,23 @@ public class Client {
     }
   }
 
-  private static void remove(String[] commands) {
+  private static void add(String[] commands) {
+    if (commands[1].equals("employee") && commands[3].equals("project")) {
+      JpaUtil.executeInTransaction(emf, () -> {
+        EmployeeRepository emplRepo = JpaUtil.getJpaRepository(emf, EmployeeRepository.class);
+        ProjectRepository projectRepo = JpaUtil.getJpaRepository(emf, ProjectRepository.class);
+        Employee employee = emplRepo.getOne(Long.parseLong(commands[2]));
+        Project project = projectRepo.getOne(Long.parseLong(commands[4]));
+        employee.addProject(project);
+        emplRepo.saveAndFlush(employee);
+        projectRepo.saveAndFlush(project);
+      });
+    } else {
+      Printer.printInvalidCommandError(commands);
+    }
+  }
+
+  private static void delete(String[] commands) {
     switch (commands[1]) {
       case "project":
         JpaUtil.executeInTransaction(emf, () -> {
@@ -162,6 +194,22 @@ public class Client {
       default:
         Printer.printInvalidCommandError(commands);
         break;
+    }
+  }
+
+  private static void remove(String[] commands) {
+    if (commands[1].equals("employee") && commands[3].equals("project")) {
+      JpaUtil.executeInTransaction(emf, () -> {
+        EmployeeRepository emplRepo = JpaUtil.getJpaRepository(emf, EmployeeRepository.class);
+        ProjectRepository projectRepo = JpaUtil.getJpaRepository(emf, ProjectRepository.class);
+        Employee employee = emplRepo.getOne(Long.parseLong(commands[2]));
+        Project project = projectRepo.getOne(Long.parseLong(commands[4]));
+        employee.removeProject(project);
+        emplRepo.saveAndFlush(employee);
+        projectRepo.saveAndFlush(project);
+      });
+    } else {
+      Printer.printInvalidCommandError(commands);
     }
   }
 

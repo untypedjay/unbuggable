@@ -1,15 +1,19 @@
 package io.untypedjay.unbuggable.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Project {
   @Id
   @GeneratedValue
   private Long id;
+
   private String name;
+
+  @ManyToMany(mappedBy = "projects", fetch = FetchType.LAZY)
+  private Set<Employee> employees = new HashSet<>();
 
   public Project() {
   }
@@ -32,5 +36,13 @@ public class Project {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public Set<Employee> getEmployees() {
+    return employees;
+  }
+
+  public void setEmployees(Set<Employee> employees) {
+    this.employees = employees;
   }
 }

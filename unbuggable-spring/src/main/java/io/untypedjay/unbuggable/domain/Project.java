@@ -15,6 +15,9 @@ public class Project {
   @ManyToMany(mappedBy = "projects", fetch = FetchType.LAZY)
   private Set<Employee> employees = new HashSet<>();
 
+  @OneToMany(fetch = FetchType.LAZY)
+  private Set<Issue> issues = new HashSet<>();
+
   public Project() {
   }
 
@@ -44,5 +47,17 @@ public class Project {
 
   public void setEmployees(Set<Employee> employees) {
     this.employees = employees;
+  }
+
+  public Set<Issue> getIssues() {
+    return issues;
+  }
+
+  public void setIssues(Set<Issue> issues) {
+    this.issues = issues;
+  }
+
+  public void addIssue(Issue issue) {
+    this.issues.add(issue);
   }
 }

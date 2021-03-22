@@ -35,6 +35,7 @@ public class Issue {
     this.state = State.NEW;
     this.name = name;
     this.project = project;
+    project.addIssue(this);
     this.priority = priority;
     this.assignee = null;
   }

@@ -3,11 +3,14 @@ package io.untypedjay.unbuggable.util;
 import io.untypedjay.unbuggable.dao.EmployeeRepository;
 import io.untypedjay.unbuggable.dao.ProjectRepository;
 import io.untypedjay.unbuggable.domain.Employee;
+import io.untypedjay.unbuggable.domain.Issue;
 import io.untypedjay.unbuggable.domain.Project;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
 import java.util.Set;
+
+import static io.untypedjay.unbuggable.util.TimeUtil.formatDuration;
 
 public class Printer {
   public static void printInvalidCommandError(String[] commandArray) {
@@ -42,7 +45,26 @@ public class Printer {
   }
 
   public static void printProjectIssues(EntityManagerFactory emf, Long projectId) {
-    // TODO list remaining and completed time for project
+    JpaUtil.executeInTransaction(emf, () -> {
+      ProjectRepository projectRepo = JpaUtil.getJpaRepository(emf, ProjectRepository.class);
+      System.out.println("ID    NAME    STATE   PRIORITY    ESTIMATED   EXPENDED    ASSIGNEE");
+      Project project = projectRepo.getOne(projectId);
+      Set<Issue> issues = project.getIssues();
+      for (var issue : issues) {
+        System.out.print(issue.getId() + "   ");
+        System.out.print(issue.getName() + "    ");
+        System.out.print(issue.getState() + "    ");
+        System.out.print(formatDuration(issue.getEstimatedTime()) + "   ");
+        System.out.print(formatDuration(issue.getExpendedTime()) + "    ");
+        Employee assignee = issue.getAssignee();
+        if (assignee == null) {
+          System.out.println("<not assigned>");
+        } else {
+          System.out.print(assignee.getFirstName() + " " + assignee.getLastName());
+        }
+        System.out.println();
+      }
+    });
   }
 
   public static void printProjectIssuesByEmployee(EntityManagerFactory emf, Long projectId, Long employeeId) {

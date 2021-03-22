@@ -11,6 +11,7 @@ public class Issue {
   @GeneratedValue
   private Long id;
   private State state;
+  private String name;
   private Priority priority;
   private Duration estimatedTime;
   private Duration expendedTime = Duration.ofSeconds(0);
@@ -20,8 +21,9 @@ public class Issue {
 
   public Issue() { }
 
-  public Issue(Priority priority, Duration estimatedTime) {
+  public Issue(String name, Priority priority, Duration estimatedTime) {
     this.state = State.NEW;
+    this.name = name;
     this.priority = priority;
     this.estimatedTime = estimatedTime;
     this.assignee = null;
@@ -41,6 +43,14 @@ public class Issue {
 
   public void setState(State state) {
     this.state = state;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
   public Priority getPriority() {

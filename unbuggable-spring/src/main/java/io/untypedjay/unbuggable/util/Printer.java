@@ -23,8 +23,16 @@ public class Printer {
 //    }
   }
 
+  public static void printProjectIssues(int projectId) {
+    // TODO list remaining and completed time for project
+  }
+
+  public static void printProjectIssuesByEmployee(int projectId, int employeeId) {
+    // TODO filter by status
+  }
+
   public static void printEmployees() {
-    System.out.println("ID    NAME    DATE OF BIRTH   ADDRESS");
+    System.out.println("ID    NAME    DATE OF BIRTH");
     // TODO
 //    List<Employee> employees = employeeService.getAll();
 //    for (var employee : employees) {
@@ -42,32 +50,32 @@ public class Printer {
         System.out.println("Usage:  list ENTITY [ID] [OPTION]");
         System.out.println("List items of an entity");
         System.out.println("ENTITY: 'project', 'employee',");
-        System.out.println("list employee: list employees");
-        System.out.println("list project [ID] [PROJECT_OPTIONS]: list all or specific project"); // TODO list remaining and completed time for project by emplyoee
-        System.out.println("  PROJECT_OPTIONS: -E (employees) -I (issues"); // TODO filter by status, grouped by employee
+        System.out.println("list employee: list all employees");
+        System.out.println("list project [ID] [PROJECT_OPTIONS]: list all or specific projects");
+        System.out.println("  PROJECT_OPTIONS: -E EMPLOYEE_ID (list issues in project by employee");
         break;
       case "add":
         System.out.println("Usage:  add ENTITY PARAMS");
         System.out.println("Create a new entity");
         System.out.println("ENTITY: 'project', 'issue', 'employee'");
-        System.out.println("PARAMS:"); // TODO
+        System.out.println("PARAMS:");
         System.out.println("-project: NAME (string)");
-        System.out.println("-issue: PRIORITY ('LOW' | 'NORMAL' | 'HIGH'), ESTIMATED COMPLETION TIME (hh:mm:ss)");
-        System.out.println("-employee: FIRST NAME (string), LAST NAME (string), DATE OF BIRTH (dd:mm:yyyy)");
+        System.out.println("-issue: NAME (string), PRIORITY ('LOW' | 'NORMAL' | 'HIGH'), ESTIMATED COMPLETION TIME (hh:mm:ss)");
+        System.out.println("-employee: FIRST NAME (string), LAST NAME (string), DATE OF BIRTH (dd:mm:yyyy) | EMPLOYEE_ID (integer) -P PROJECT_ID (integer)");
         break;
       case "remove":
-        System.out.println("Usage:  remove ENTITY ID [OPTIONS]");
+        System.out.println("Usage:  remove ENTITY ID");
         System.out.println("Remove a specific entity");
         System.out.println("ENTITY: 'project', 'issue'");
-        System.out.println("OPTIONS:");
-        System.out.println("remove project PROJECT_ID -E EMPLOYEE_ID");
         break;
       case "update":
-        System.out.println("Usage:  update ENTITY PARAMS");
-        System.out.println("Update a specific entity");
-        System.out.println("ENTITY: 'issue'");
+        System.out.println("Usage:  update issue ID PARAMS");
+        System.out.println("Update an issue");
         System.out.println("PARAMS:");
-        System.out.println("-issue: "); // TODO issue status, estimated time
+        System.out.println("-T TIME (hh:mm:ss): add spent time");
+        System.out.println("-A EMPLOYEE_ID (integer): assign employee");
+        System.out.println("-E TIME (hh:mm:ss): update estimation");
+        System.out.println("-S STATUS ('NEW', 'OPEN', 'RESOLVED', 'CLOSED', 'REJECTED'): update status");
         break;
       case "exit":
         System.out.println("Usage:  exit");

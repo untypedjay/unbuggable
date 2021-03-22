@@ -63,8 +63,8 @@ public class Printer {
         System.out.println("ENTITY: 'project', 'issue', 'employee'");
         System.out.println("PARAMS:");
         System.out.println("-project: NAME (string)");
-        System.out.println("-issue: NAME (string), PRIORITY ('LOW' | 'NORMAL' | 'HIGH'), ESTIMATED COMPLETION TIME (hh:mm:ss)");
-        System.out.println("-employee: FIRST NAME (string), LAST NAME (string), DATE OF BIRTH (dd:mm:yyyy) | EMPLOYEE_ID (integer) -P PROJECT_ID (integer)");
+        System.out.println("-issue: NAME, PROJECT_ID, PRIORITY ('LOW' | 'NORMAL' | 'HIGH')");
+        System.out.println("-employee: FIRST NAME, LAST NAME, DATE OF BIRTH (dd:mm:yyyy)");
         break;
       case "add":
         System.out.println("Usage: add SUBJECT ID TARGET ID");

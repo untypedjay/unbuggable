@@ -4,6 +4,7 @@ import io.untypedjay.unbuggable.dao.EmployeeRepository;
 import io.untypedjay.unbuggable.dao.IssueRepository;
 import io.untypedjay.unbuggable.dao.ProjectRepository;
 import io.untypedjay.unbuggable.domain.Employee;
+import io.untypedjay.unbuggable.domain.Issue;
 import io.untypedjay.unbuggable.domain.Project;
 import io.untypedjay.unbuggable.util.JpaUtil;
 import io.untypedjay.unbuggable.util.Printer;
@@ -40,7 +41,7 @@ public class Client {
             break;
 
           case "new":
-            if (commands.length > 2 && commands.length < 6) {
+            if (commands.length > 2 && commands.length < 7) {
               newEntity(commands);
             } else {
               Printer.printInvalidCommandError(commands);
@@ -141,7 +142,12 @@ public class Client {
         });
         break;
       case "issue":
-        //TODO issueService.add(commands[2], commands[3]); // priority, estimated completion time
+        JpaUtil.executeInTransaction(emf, () -> {
+          IssueRepository issueRepo = JpaUtil.getJpaRepository(emf, IssueRepository.class);
+          ProjectRepository projectRepo = JpaUtil.getJpaRepository(emf, ProjectRepository.class);
+          Project project = projectRepo.getOne(Long.parseLong(commands[3]));
+          issueRepo.saveAndFlush(new Issue(commands[2], project, Issue.Priority.valueOf(commands[4].toUpperCase())));
+        });
         break;
       case "employee":
         JpaUtil.executeInTransaction(emf, () -> {

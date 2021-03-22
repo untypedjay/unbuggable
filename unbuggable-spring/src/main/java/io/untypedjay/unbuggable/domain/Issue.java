@@ -10,22 +10,32 @@ public class Issue {
   @Id
   @GeneratedValue
   private Long id;
+
   private State state;
+
   private String name;
+
+  @org.hibernate.annotations.Fetch(FetchMode.JOIN)
+  @ManyToOne(fetch = FetchType.EAGER)
+  private Project project;
+
   private Priority priority;
-  private Duration estimatedTime;
+
+  private Duration estimatedTime = Duration.ofSeconds(0);
+
   private Duration expendedTime = Duration.ofSeconds(0);
+
   @org.hibernate.annotations.Fetch(FetchMode.JOIN)
   @ManyToOne(fetch = FetchType.EAGER)
   private Employee assignee;
 
   public Issue() { }
 
-  public Issue(String name, Priority priority, Duration estimatedTime) {
+  public Issue(String name, Project project, Priority priority) {
     this.state = State.NEW;
     this.name = name;
+    this.project = project;
     this.priority = priority;
-    this.estimatedTime = estimatedTime;
     this.assignee = null;
   }
 

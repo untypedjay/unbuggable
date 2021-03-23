@@ -22,10 +22,12 @@ public class Printer {
   public static void printProjects(EntityManagerFactory emf) {
     JpaUtil.executeInTransaction(emf, () -> {
       ProjectRepository projectRepo = JpaUtil.getJpaRepository(emf, ProjectRepository.class);
-      System.out.println("ID    NAME");
+      System.out.println("ID                          NAME");
       List<Project> projects = projectRepo.findAll();
       for (var project : projects) {
-        System.out.println(project.getId() + "    " + project.getName());
+        System.out.format("%2s", project.getId());
+        System.out.format("%30s", project.getName());
+        System.out.println();
       }
     });
   }
@@ -33,13 +35,13 @@ public class Printer {
   public static void printProject(EntityManagerFactory emf, Long projectId) {
     JpaUtil.executeInTransaction(emf, () -> {
       ProjectRepository projectRepo = JpaUtil.getJpaRepository(emf, ProjectRepository.class);
-      System.out.println("ID    NAME    DATE OF BIRTH");
+      System.out.println("ID                          NAME       DATE OF BIRTH");
       Project project = projectRepo.getOne(projectId);
       Set<Employee> members = project.getEmployees();
       for (var member : members) {
-        System.out.print(member.getId() + "   ");
-        System.out.print(member.getFirstName() + " " + member.getLastName() + "   ");
-        System.out.print(member.getDateOfBirth() + "    ");
+        System.out.format("%2s", member.getId());
+        System.out.format("%30s", member.getFirstName() + " " + member.getLastName());
+        System.out.format("%20s", member.getDateOfBirth());
         System.out.println();
       }
     });
@@ -67,7 +69,7 @@ public class Printer {
   private static void printIssues(Set<Issue> issues, Employee employee) {
     Duration timeLeft = Duration.ofSeconds(0);
     Duration alreadyDone = Duration.ofSeconds(0);
-    System.out.println("ID     NAME      STATE     PRIORITY      ESTIMATED     EXPENDED     FULFILLMENT     ASSIGNEE");
+    System.out.println("ID                NAME     STATE     PRIORITY    ESTIMATED     EXPENDED    FULFILLMENT                      ASSIGNEE");
     for (var issue : issues) {
       if (employee != null && issue.getAssignee() != employee) {
         continue;
@@ -76,22 +78,22 @@ public class Printer {
       Duration expended = issue.getExpendedTime();
       timeLeft = timeLeft.plus(estimation.minus(expended));
       alreadyDone = alreadyDone.plus(expended);
-      System.out.print(issue.getId() + "   ");
-      System.out.print(issue.getName() + "    ");
-      System.out.print(issue.getState() + "    ");
-      System.out.print(issue.getPriority() + "    ");
-      System.out.print(formatDuration(estimation) + "   ");
-      System.out.print(formatDuration(expended) + "    ");
+      System.out.format("%2s", issue.getId());
+      System.out.format("%20s", issue.getName());
+      System.out.format("%10s", issue.getState());
+      System.out.format("%13s", issue.getPriority());
+      System.out.format("%13s", formatDuration(estimation));
+      System.out.format("%13s", formatDuration(expended));
       double percentage = 0;
       if (estimation.getSeconds() != 0 && expended.getSeconds() != 0) {
         percentage = ((double)expended.getSeconds() / (double)estimation.getSeconds()) * 100;
       }
-      System.out.print(percentage + "%     ");
+      System.out.format("%15s", percentage + "%");
       Employee assignee = issue.getAssignee();
       if (assignee == null) {
-        System.out.print("<not assigned>");
+        System.out.format("%13s", "<not assigned>");
       } else {
-        System.out.print(assignee.getFirstName() + " " + assignee.getLastName());
+        System.out.format("%30s", assignee.getFirstName() + " " + assignee.getLastName());
       }
       System.out.println();
     }
@@ -103,12 +105,12 @@ public class Printer {
   public static void printEmployees(EntityManagerFactory emf) {
     JpaUtil.executeInTransaction(emf, () -> {
       EmployeeRepository emplRepo = JpaUtil.getJpaRepository(emf, EmployeeRepository.class);
-      System.out.println("ID    NAME    DATE OF BIRTH");
+      System.out.println("ID                          NAME       DATE OF BIRTH");
       List<Employee> employees = emplRepo.findAll();
       for (var employee : employees) {
-        System.out.print(employee.getId() + "   ");
-        System.out.print(employee.getFirstName() + " " + employee.getLastName() + "   ");
-        System.out.print(employee.getDateOfBirth() + "    ");
+        System.out.format("%2s", employee.getId());
+        System.out.format("%30s", employee.getFirstName() + " " + employee.getLastName());
+        System.out.format("%20s", employee.getDateOfBirth());
         System.out.println();
       }
     });
@@ -155,7 +157,7 @@ public class Printer {
         System.out.println("PARAMS:");
         System.out.println("-T TIME (hh:mm:ss): add spent time");
         System.out.println("-E TIME (hh:mm:ss): update estimation");
-        System.out.println("-S STATUS ('NEW', 'OPEN', 'RESOLVED', 'CLOSED', 'REJECTED'): update status");
+        System.out.println("-S STATE ('NEW', 'OPEN', 'RESOLVED', 'CLOSED', 'REJECTED'): update state");
         break;
       case "exit":
         System.out.println("Usage:  exit");

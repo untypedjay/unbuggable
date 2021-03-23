@@ -7,6 +7,7 @@ import io.untypedjay.unbuggable.domain.Issue;
 import io.untypedjay.unbuggable.domain.Project;
 
 import javax.persistence.EntityManagerFactory;
+import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 
@@ -29,7 +30,7 @@ public class Printer {
     });
   }
 
-  public static void printEmployeesOfProject(EntityManagerFactory emf, Long projectId) {
+  public static void printProject(EntityManagerFactory emf, Long projectId) {
     JpaUtil.executeInTransaction(emf, () -> {
       ProjectRepository projectRepo = JpaUtil.getJpaRepository(emf, ProjectRepository.class);
       System.out.println("ID    NAME    DATE OF BIRTH");
@@ -47,28 +48,50 @@ public class Printer {
   public static void printProjectIssues(EntityManagerFactory emf, Long projectId) {
     JpaUtil.executeInTransaction(emf, () -> {
       ProjectRepository projectRepo = JpaUtil.getJpaRepository(emf, ProjectRepository.class);
-      System.out.println("ID    NAME    STATE   PRIORITY    ESTIMATED   EXPENDED    ASSIGNEE");
       Project project = projectRepo.getOne(projectId);
-      Set<Issue> issues = project.getIssues();
-      for (var issue : issues) {
-        System.out.print(issue.getId() + "   ");
-        System.out.print(issue.getName() + "    ");
-        System.out.print(issue.getState() + "    ");
-        System.out.print(formatDuration(issue.getEstimatedTime()) + "   ");
-        System.out.print(formatDuration(issue.getExpendedTime()) + "    ");
-        Employee assignee = issue.getAssignee();
-        if (assignee == null) {
-          System.out.println("<not assigned>");
-        } else {
-          System.out.print(assignee.getFirstName() + " " + assignee.getLastName());
-        }
-        System.out.println();
-      }
+      printIssues(project.getIssues());
     });
   }
 
   public static void printProjectIssuesByEmployee(EntityManagerFactory emf, Long projectId, Long employeeId) {
-    // TODO filter by status
+    JpaUtil.executeInTransaction(emf, () -> {
+      EmployeeRepository emplRepo = JpaUtil.getJpaRepository(emf, EmployeeRepository.class);
+      ProjectRepository projectRepo = JpaUtil.getJpaRepository(emf, ProjectRepository.class);
+      Employee employee = emplRepo.getOne(employeeId);
+      System.out.println("===" + employee.getFirstName() + " " + employee.getLastName() + "===");
+      Project project = projectRepo.getOne(projectId);
+      printIssues(project.getIssues());
+    });
+  }
+
+  private static void printIssues(Set<Issue> issues) {
+    Duration timeLeft = Duration.ofSeconds(0);
+    System.out.println("ID     NAME      STATE     PRIORITY      ESTIMATED     EXPENDED     FULFILLMENT     ASSIGNEE");
+    for (var issue : issues) {
+      Duration estimation = issue.getEstimatedTime();
+      Duration expended = issue.getExpendedTime();
+      timeLeft = timeLeft.plus(estimation.minus(expended));
+      System.out.print(issue.getId() + "   ");
+      System.out.print(issue.getName() + "    ");
+      System.out.print(issue.getState() + "    ");
+      System.out.print(issue.getPriority() + "    ");
+      System.out.print(formatDuration(estimation) + "   ");
+      System.out.print(formatDuration(expended) + "    ");
+      long percentage = 0;
+      if (!estimation.isZero() && !expended.isZero()) {
+        percentage = (expended.getSeconds() / estimation.getSeconds()) * 100;
+      }
+      System.out.print(percentage + "%     ");
+      Employee assignee = issue.getAssignee();
+      if (assignee == null) {
+        System.out.print("<not assigned>");
+      } else {
+        System.out.print(assignee.getFirstName() + " " + assignee.getLastName());
+      }
+      System.out.println();
+    }
+
+    System.out.println("Remaining time: " + formatDuration(timeLeft));
   }
 
   public static void printEmployees(EntityManagerFactory emf) {

@@ -117,7 +117,7 @@ public class Client {
         if (commands.length == 2) { // list project
           Printer.printProjects(emf);
         } else if (commands.length == 3) { // list project ID
-          Printer.printEmployeesOfProject(emf, Long.parseLong(commands[2]));
+          Printer.printProject(emf, Long.parseLong(commands[2]));
         } else if (commands.length == 4) { // list project ID -I
           Printer.printProjectIssues(emf, Long.parseLong(commands[2]));
         } else if (commands.length == 5) { // list project ID -E ID

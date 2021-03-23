@@ -49,7 +49,7 @@ public class Printer {
     JpaUtil.executeInTransaction(emf, () -> {
       ProjectRepository projectRepo = JpaUtil.getJpaRepository(emf, ProjectRepository.class);
       Project project = projectRepo.getOne(projectId);
-      printIssues(project.getIssues());
+      printIssues(project.getIssues(), null);
     });
   }
 
@@ -60,26 +60,31 @@ public class Printer {
       Employee employee = emplRepo.getOne(employeeId);
       System.out.println("===" + employee.getFirstName() + " " + employee.getLastName() + "===");
       Project project = projectRepo.getOne(projectId);
-      printIssues(project.getIssues());
+      printIssues(project.getIssues(), employee);
     });
   }
 
-  private static void printIssues(Set<Issue> issues) {
+  private static void printIssues(Set<Issue> issues, Employee employee) {
     Duration timeLeft = Duration.ofSeconds(0);
+    Duration alreadyDone = Duration.ofSeconds(0);
     System.out.println("ID     NAME      STATE     PRIORITY      ESTIMATED     EXPENDED     FULFILLMENT     ASSIGNEE");
     for (var issue : issues) {
+      if (employee != null && issue.getAssignee() != employee) {
+        continue;
+      }
       Duration estimation = issue.getEstimatedTime();
       Duration expended = issue.getExpendedTime();
       timeLeft = timeLeft.plus(estimation.minus(expended));
+      alreadyDone = alreadyDone.plus(expended);
       System.out.print(issue.getId() + "   ");
       System.out.print(issue.getName() + "    ");
       System.out.print(issue.getState() + "    ");
       System.out.print(issue.getPriority() + "    ");
       System.out.print(formatDuration(estimation) + "   ");
       System.out.print(formatDuration(expended) + "    ");
-      long percentage = 0;
-      if (!estimation.isZero() && !expended.isZero()) {
-        percentage = (expended.getSeconds() / estimation.getSeconds()) * 100;
+      double percentage = 0;
+      if (estimation.getSeconds() != 0 && expended.getSeconds() != 0) {
+        percentage = ((double)expended.getSeconds() / (double)estimation.getSeconds()) * 100;
       }
       System.out.print(percentage + "%     ");
       Employee assignee = issue.getAssignee();
@@ -91,7 +96,8 @@ public class Printer {
       System.out.println();
     }
 
-    System.out.println("Remaining time: " + formatDuration(timeLeft));
+    System.out.println("Time Remaining: " + formatDuration(timeLeft));
+    System.out.println("Time Spent: " + formatDuration(alreadyDone));
   }
 
   public static void printEmployees(EntityManagerFactory emf) {

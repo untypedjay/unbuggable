@@ -14,13 +14,14 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import javax.persistence.EntityManagerFactory;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.time.Duration;
 import java.time.LocalDate;
 
 import static io.untypedjay.unbuggable.util.Converter.toLocalDate;
 import static io.untypedjay.unbuggable.util.TimeUtil.parseDuration;
 
 public class Client {
-  private final static String CONFIG_LOCATION = "io/untypedjay/unbuggable/test/applicationContext-jpa1.xml";
+  private final static String CONFIG_LOCATION = "io/untypedjay/unbuggable/test/applicationContext.xml";
   private static EntityManagerFactory emf;
 
   public static void main(String[] args) {
@@ -102,12 +103,46 @@ public class Client {
   private static void seedDatabase() {
     JpaUtil.executeInTransaction(emf, () -> {
       EmployeeRepository emplRepo = JpaUtil.getJpaRepository(emf, EmployeeRepository.class);
+      ProjectRepository projectRepo = JpaUtil.getJpaRepository(emf, ProjectRepository.class);
+      IssueRepository issueRepo = JpaUtil.getJpaRepository(emf, IssueRepository.class);
 
       Employee empl1 = new Employee("Josefine", "Feichtlbauer", LocalDate.of(1970, 10, 26));
       Employee empl2 = new Employee("Franz", "Heinzelmayr", LocalDate.of(1975, 9, 20));
+      Employee empl3 = new Employee("Elon", "Musk", LocalDate.of(1880, 2, 2));
+
+      Project proj1 = new Project("ProjectX");
+      Project proj2 = new Project("TopSecret");
+      empl1.addProject(proj1);
+      empl3.addProject(proj1);
+      empl2.addProject(proj2);
+      empl3.addProject(proj2);
+
+      Issue iss1 = new Issue("Configuration", proj1, Issue.Priority.NORMAL);
+      Issue iss2 = new Issue("Implementation", proj1, Issue.Priority.HIGH);
+      Issue iss3 = new Issue("Testing", proj1, Issue.Priority.LOW);
+      Issue iss4 = new Issue("Planning", proj2, Issue.Priority.NORMAL);
+      Issue iss5 = new Issue("Deployment", proj2, Issue.Priority.HIGH);
+      iss2.setAssignee(empl3);
+      iss5.setAssignee(empl2);
+      iss4.setAssignee(empl3);
+      iss5.setEstimatedTime(Duration.ofMinutes(40));
+      iss2.setEstimatedTime(Duration.ofMinutes(34));
+      iss5.addTime(Duration.ofMinutes(12));
+
       emplRepo.save(empl1);
       emplRepo.save(empl2);
+      emplRepo.save(empl3);
+      projectRepo.save(proj1);
+      projectRepo.save(proj2);
+      issueRepo.save(iss1);
+      issueRepo.save(iss2);
+      issueRepo.save(iss3);
+      issueRepo.save(iss4);
+      issueRepo.save(iss5);
+
       emplRepo.flush();
+      projectRepo.flush();
+      issueRepo.flush();
     });
   }
 
